@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Javier Lopetegui</title>
+  <meta name="description" content="Javier Lopetegui — PhD student at WILLOW, Inria Paris & ENS. Video generation and world models for robotics." />
+  <meta name="author" content="Javier Alejandro Lopetegui Gonzalez" />
+
+  <!-- Open Graph / social preview -->
+  <meta property="og:title" content="Javier Lopetegui" />
+  <meta property="og:description" content="PhD student at WILLOW, Inria Paris & ENS. Video generation and world models for robotics." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://jlopetegui98.github.io/" />
+  <meta property="og:image" content="https://jlopetegui98.github.io/assets/img/prof_pic.jpg" />
+
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+
+  <!-- Fonts (same pairing as al-folio) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1.9.4/css/academicons.min.css" />
+
+  <link rel="stylesheet" href="assets/css/style.css?v=2" />
+
+  <!-- Set the theme before first paint to avoid a flash of the wrong theme -->
+  <script>
+    (function () {
+      var t = localStorage.getItem("theme");
+      if (!t) t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", t);
+    })();
+  </script>
+</head>
+
+<body>
+  <!-- ══════════════════════════════ NAVBAR ══════════════════════════════ -->
+  <header class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a class="nav-brand" href="#top">Javier Lopetegui</a>
+
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <nav class="nav-links" id="nav-links">
+        <a href="#about" class="nav-link">About me</a>
+        <a href="#news" class="nav-link">News</a>
+        <a href="#research" class="nav-link">Research</a>
+        <a href="#teaching" class="nav-link">Teaching</a>
+        <!-- TODO(cv): drop your CV at assets/pdf/cv.pdf and uncomment this line
+        <a href="assets/pdf/cv.pdf" class="nav-link nav-cv" target="_blank" rel="noopener">CV</a>
+        -->
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <i class="fa-solid fa-sun icon-light"></i>
+          <i class="fa-solid fa-moon icon-dark"></i>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- ══════════════════════════════ HERO ══════════════════════════════ -->
+    <section class="hero" id="hero">
+      <div class="container hero-grid">
+        <div class="hero-text">
+          <p class="hero-greeting">Hi!</p>
+          <h1 class="hero-name">I'm <span class="accent">Javier Lopetegui</span></h1>
+          <p class="hero-tagline">
+            PhD student at <a href="https://www.di.ens.fr/willow/" target="_blank" rel="noopener">WILLOW</a>,
+            <a href="https://www.inria.fr/en/inria-paris-centre" target="_blank" rel="noopener">Inria Paris</a> &amp;
+            <a href="https://www.ens.psl.eu/en" target="_blank" rel="noopener">ENS</a>,
+            advised by <a href="https://cordeliaschmid.github.io/" target="_blank" rel="noopener">Cordelia Schmid</a>.
+          </p>
+          <p class="hero-blurb">
+            I work on <strong>World-Action Models</strong> — video generation models adapted to jointly
+            predict future observations and actions — as a paradigm for robot policy learning.
+          </p>
+
+          <ul class="socials">
+            <li><a href="mailto:javier-alejandro.lopetegui-gonzalez@inria.fr" aria-label="Email" title="Email"><i class="fa-solid fa-envelope"></i></a></li>
+            <li><a href="https://scholar.google.com/citations?user=nae1XHgAAAAJ&hl=en" target="_blank" rel="noopener" aria-label="Google Scholar" title="Google Scholar"><i class="ai ai-google-scholar"></i></a></li>
+            <li><a href="https://github.com/jlopetegui98" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub"><i class="fa-brands fa-github"></i></a></li>
+            <li><a href="https://www.linkedin.com/in/javier-alejandro-lopetegui-gonzalez-7215871b8/" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a></li>
+          </ul>
+        </div>
+
+        <div class="hero-photo">
+          <img src="assets/img/prof_pic.jpg?v=2" alt="Javier Lopetegui" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════ ABOUT ══════════════════════════════ -->
+    <section id="about">
+      <div class="container">
+        <h2 class="section-title">About me</h2>
+        <div class="prose">
+          <p>
+            I am a first-year PhD student in the <a href="https://www.di.ens.fr/willow/" target="_blank" rel="noopener">WILLOW</a>
+            team at Inria Paris and École Normale Supérieure, supervised by
+            <a href="https://cordeliaschmid.github.io/" target="_blank" rel="noopener">Cordelia Schmid</a>.
+            I work on <em>World-Action Models</em>: large video diffusion models adapted to jointly predict
+            future observations and actions, which makes them a promising paradigm for robot policy learning.
+          </p>
+          <p>
+            Before starting the PhD I completed the <a href="https://www.master-mva.com/" target="_blank" rel="noopener">MVA</a>
+            master at ENS Paris-Saclay and an M1 in Artificial Intelligence at Université Paris-Saclay, supported by an
+            Excellence Scholarship from the French Embassy in Cuba. I did my BSc in Computer Science at the
+            University of Havana, where I also spent three years as a teaching assistant.
+          </p>
+          <p>
+            Along the way I worked on promptable medical image segmentation at
+            <a href="https://raidium.eu/" target="_blank" rel="noopener">Raidium</a>, and on NLP for language
+            varieties and biomedical text at Inria's
+            <a href="https://almanach.inria.fr/" target="_blank" rel="noopener">ALMAnaCH</a> team and at
+            <a href="https://www.lisn.upsaclay.fr/" target="_blank" rel="noopener">LISN</a>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════ NEWS ══════════════════════════════ -->
+    <section id="news">
+      <div class="container">
+        <h2 class="section-title">News</h2>
+        <ul class="news-list">
+          <li>
+            <span class="news-date">Jul 2026</span>
+            <span class="news-text">🇮🇹 Presented <strong>SA-WAM</strong> as a poster at the International Computer Vision Summer School (<a href="https://iplab.dmi.unict.it/icvss/" target="_blank" rel="noopener">ICVSS 2026</a>), Sicily.</span>
+          </li>
+          <li>
+            <span class="news-date">Nov 2025</span>
+            <span class="news-text">🎓 Started my PhD in the WILLOW team at Inria Paris / ENS, advised by Cordelia Schmid.</span>
+          </li>
+          <li>
+            <span class="news-date">Oct 2025</span>
+            <span class="news-text">✅ Graduated from the MVA master at ENS Paris-Saclay.</span>
+          </li>
+          <li>
+            <span class="news-date">Apr 2025</span>
+            <span class="news-text">🩻 Joined <a href="https://raidium.eu/" target="_blank" rel="noopener">Raidium</a> as a research intern, working on text-promptable medical image segmentation.</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════ RESEARCH ══════════════════════════════ -->
+    <section id="research">
+      <div class="container">
+        <h2 class="section-title">Research</h2>
+
+        <!-- ─── SA-WAM ─── -->
+        <article class="pub">
+          <div class="pub-preview">
+            <img src="assets/img/sa-wam-method.png" alt="SA-WAM method diagram" />
+          </div>
+          <div class="pub-body">
+            <h3 class="pub-title">Spatially Aware World Action Model via Geometric Latent Diffusion</h3>
+            <p class="pub-authors"><strong>Javier Alejandro Lopetegui Gonzalez</strong>, Paul Pacaud, Cordelia Schmid</p>
+            <p class="pub-venue">Preprint, 2026</p>
+            <p class="pub-abstract">
+              World Action Models (WAMs) leverage large-scale pretrained video diffusion models to jointly
+              predict future observations and actions, yet the prevailing models operate exclusively on RGB
+              and do not leverage 3D information. SA-WAM repurposes a pretrained video model for joint action,
+              RGB and <strong>depth</strong> prediction within a single diffusion backbone: a nonlinear encoding
+              maps the unbounded depth signal into the bounded input domain expected by the frozen VAE tokenizer,
+              reusing the encoder without 3D-specific fine-tuning. It achieves state-of-the-art results on the
+              <strong>RoboCasa</strong> and <strong>LIBERO-Plus</strong> benchmarks and outperforms strong
+              baselines on a real UR5 arm.
+            </p>
+            <!-- TODO(links): arXiv / Code / BibTeX still need real URLs -->
+            <p class="pub-links">
+              <a href="#" class="btn">arXiv</a>
+              <a href="projects/sa_wam.html" class="btn">Project page</a>
+              <a href="#" class="btn">Code</a>
+              <a href="#" class="btn">BibTeX</a>
+            </p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════ TEACHING ══════════════════════════════ -->
+    <section id="teaching">
+      <div class="container">
+        <h2 class="section-title">Teaching</h2>
+        <ul class="teaching-list">
+          <li>
+            <div class="teaching-main">
+              <span class="teaching-course">Introduction to Programming</span>
+              <span class="teaching-meta">Student teaching assistant — practical sessions for 1st-year Computer Science students,
+                Faculty of Mathematics and Computer Science, University of Havana</span>
+            </div>
+            <span class="teaching-date">Jan 2020 – Jul 2023</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>© 2026 Javier Alejandro Lopetegui González. Inspired by <a href="https://github.com/alshedivat/al-folio" target="_blank" rel="noopener">al-folio</a>.</p>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js?v=2"></script>
+</body>
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SA-WAM</title>
+  <meta name="description" content="Spatially Aware World Action Model via Geometric Latent Diffusion — injecting explicit depth into World Action Models for robot policy learning." />
+
+  <meta property="og:title" content="SA-WAM: Spatially Aware World Action Model via Geometric Latent Diffusion" />
+  <meta property="og:description" content="Injecting explicit depth into World Action Models for robot policy learning." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://jlopetegui98.github.io/projects/sa_wam.html" />
+  <meta property="og:image" content="https://jlopetegui98.github.io/assets/img/sawam/teaser.png" />
+
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css" />
+
+  <link rel="stylesheet" href="../assets/css/style.css?v=2" />
+  <link rel="stylesheet" href="../assets/css/project.css?v=5" />
+
+  <script>
+    (function () {
+      var t = localStorage.getItem("theme");
+      if (!t) t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", t);
+    })();
+  </script>
+</head>
+
+<body>
+  <header class="navbar" id="navbar">
+    <div class="nav-inner">
+      <nav class="nav-links" id="nav-links">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <i class="fa-solid fa-sun icon-light"></i>
+          <i class="fa-solid fa-moon icon-dark"></i>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ══════════════════════════════ TITLE ══════════════════════════════ -->
+    <section class="paper-head">
+      <div class="container">
+        <p class="paper-tag">SA-WAM</p>
+        <h1 class="paper-title">Spatially Aware World Action Model<br />via Geometric Latent Diffusion</h1>
+
+        <p class="paper-authors">
+          <a href="../index.html">Javier Alejandro Lopetegui Gonzalez</a>
+          <a href="https://paulpacaud.com/" target="_blank" rel="noopener">Paul Pacaud</a>
+          <a href="https://cordeliaschmid.github.io/" target="_blank" rel="noopener">Cordelia Schmid</a>
+        </p>
+        <p class="paper-affil">Inria, École normale supérieure, CNRS, PSL Research University</p>
+
+        <!-- TODO(links): wire these up when the preprint and the repo are public -->
+        <p class="paper-links">
+          <a href="#" class="btn btn-lg"><i class="fa-regular fa-file-pdf"></i> Paper</a>
+          <a href="#" class="btn btn-lg"><i class="fa-brands fa-github"></i> Code</a>
+          <a href="#bibtex" class="btn btn-lg"><i class="fa-solid fa-quote-right"></i> BibTeX</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════ ABSTRACT ══════════════════════════════ -->
+    <section id="abstract">
+      <div class="container">
+        <h2 class="section-title">Abstract</h2>
+        <div class="prose">
+          <p>
+            World Action Models (WAMs) leverage the capabilities of large-scale pretrained video diffusion models
+            to jointly predict future observations and actions, inheriting rich visual and physical priors from
+            internet-scale video. This has made them a promising paradigm for robot policy learning, yet the
+            prevailing models operate exclusively on RGB observations and do not leverage 3D information. To bridge
+            this gap, we introduce a <strong>Spatially Aware World Action Model (SA-WAM)</strong>, which repurposes a
+            pretrained video model for joint action, RGB and depth prediction, enabling 3D-aware world modeling and
+            action prediction within a single diffusion backbone. We use a nonlinear encoding that maps the unbounded
+            depth signal into the bounded input domain expected by the frozen VAE tokenizer. This allows us to reuse
+            the encoder without 3D-specific fine-tuning, incorporating geometric information without sacrificing the
+            pretrained priors. SA-WAM achieves state-of-the-art results on the RoboCasa and LIBERO-Plus benchmarks,
+            while simultaneously improving future-state predictions. Furthermore, SA-WAM outperforms strong baselines
+            in real world evaluation using a UR5 robotic arm, with strong gains in randomized environments. We analyze
+            the correlation between world model prediction quality and rollout success, providing insights into WAM
+            performance and avenues for its improvement.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════ METHOD ══════════════════════════════ -->
+    <section id="method">
+      <div class="container">
+        <h2 class="section-title">Method</h2>
+        <figure class="fig">
+          <img src="../assets/img/sawam/method.png" alt="SA-WAM architecture" />
+          <figcaption>
+            <strong>SA-WAM architecture.</strong> SA-WAM injects geometry into the WAM latent sequence as
+            tokenizer-compatible frames paired with each RGB view, while proprioception and the action chunk are
+            inserted directly into latent sequence positions. The conditioning signals include the task description,
+            one RGB frame per view interleaved with its corresponding 3D modality, and the proprioception at time
+            <em>t</em>. The action token as well as the future-state RGB and 3D frames go through the denoising
+            process. The decoding phase is optional at inference time.
+          </figcaption>
+        </figure>
+
+        <div class="prose">
+          <p>
+            The frozen video tokenizer expects a bounded input, while metric depth is unbounded — so the choice of
+            normalization decides how much geometric contrast survives encoding. We compare <em>linear</em>,
+            <em>inverse</em> and <em>log-scale</em> normalization and retain the log-scale mapping, which allocates
+            greater resolution to the near field where manipulation precision matters while keeping usable precision
+            at range. It reaches the lowest overall reconstruction error (0.63&nbsp;% AbsRel) and the highest policy
+            success rate, improving over linear normalization by 5.2 points.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════ RESULTS ══════════════════════════════ -->
+    <section id="results">
+      <div class="container">
+        <h2 class="section-title">Results</h2>
+
+        <h3 class="sub-title">RoboCasa</h3>
+        <p class="table-caption">
+          Category-wise success rate (%) on the 24 RoboCasa tasks. SA-WAM obtains the highest overall success rate
+          while training on 50 demonstrations per task — 6–20× fewer than most baselines.
+        </p>
+        <div class="table-wrap">
+          <table class="results">
+            <thead>
+              <tr>
+                <th>Method</th><th>Train demos / task</th><th>PnP</th><th>Open/Close</th>
+                <th>Turn/Toggle</th><th>Coffee</th><th>Avg.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>π<sub>0</sub></td><td>300</td><td>–</td><td>–</td><td>–</td><td>–</td><td>62.5</td></tr>
+              <tr><td>VideoPolicy</td><td>300</td><td>–</td><td>–</td><td>–</td><td>–</td><td>66.0</td></tr>
+              <tr><td>UWM</td><td>1000</td><td>35.6</td><td>82.0</td><td>–</td><td>–</td><td>60.8</td></tr>
+              <tr><td>FLARE</td><td>1000</td><td>–</td><td>–</td><td>–</td><td>–</td><td>71.3</td></tr>
+              <tr><td>GR00T-N1.5</td><td>300</td><td>53.8</td><td>85.7</td><td>61.7</td><td>54.0</td><td>64.1</td></tr>
+              <tr><td>GR00T-N1.5 + HAMLET</td><td>300</td><td>48.5</td><td>87.7</td><td>69.7</td><td>64.0</td><td>66.4</td></tr>
+              <tr><td>GR00T-N1.6-ft + World2Act</td><td>300</td><td>–</td><td>–</td><td>–</td><td>–</td><td>72.6</td></tr>
+              <tr><td>Cosmos-Policy</td><td>50</td><td>51.8</td><td>91.1</td><td>66.3</td><td>61.6</td><td>67.1</td></tr>
+              <tr class="ours">
+                <td><strong>SA-WAM (ours)</strong></td><td>50</td><td>68.5</td><td>92.6</td>
+                <td>77.5</td><td>64.7</td><td class="best">76.6</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="sub-title">LIBERO-Plus</h3>
+        <p class="table-caption">
+          Weighted-average success rate (%) on LIBERO-Plus under zero-shot transfer — trained only on the original
+          LIBERO demonstrations, with no adaptation to the seven perturbation axes.
+        </p>
+        <div class="table-wrap">
+          <table class="results">
+            <thead>
+              <tr><th>Method</th><th>Avg. SR (%)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>π<sub>0</sub></td><td>53.6</td></tr>
+              <tr><td>π<sub>0</sub>-FAST</td><td>61.6</td></tr>
+              <tr><td>OpenVLA-OFT</td><td>69.6</td></tr>
+              <tr><td>RIPT-VLA</td><td>68.4</td></tr>
+              <tr><td>π<sub>0.5</sub></td><td>84.6</td></tr>
+              <tr><td>HoloBrain-0-GD</td><td>74.0</td></tr>
+              <tr><td>ABot-M0</td><td>80.5</td></tr>
+              <tr><td>Fast-WAM</td><td>50.0</td></tr>
+              <tr><td>Cosmos-Policy</td><td>81.4</td></tr>
+              <tr class="ours"><td><strong>SA-WAM (ours)</strong></td><td class="best">86.6</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">
+          SA-WAM also reaches 98.4&nbsp;% average success on standard LIBERO, on par with the strongest policies on
+          this largely saturated benchmark.
+        </p>
+
+        <h3 class="sub-title">Real-world UR5</h3>
+        <div class="fig-pair">
+          <figure class="fig">
+            <img src="../assets/img/sawam/ur5_clean.png" alt="Task-completion scores on the real UR5 arm, clean environments" />
+            <figcaption>(a) Clean environments</figcaption>
+          </figure>
+          <figure class="fig">
+            <img src="../assets/img/sawam/ur5_randomized.png" alt="Task-completion scores on the real UR5 arm, randomized environments" />
+            <figcaption>(b) Randomized environments</figcaption>
+          </figure>
+        </div>
+        <p class="fig-note">
+          <strong>Real-world UR5 results.</strong> Task-completion scores over 10 trials per category for
+          π<sub>0</sub>, Cosmos-Policy and SA-WAM. SA-WAM reaches an aggregate completion score of 90.0&nbsp;% in
+          the clean setting against 75.0&nbsp;% for Cosmos-Policy, and retains 77.5&nbsp;% under randomization
+          where Cosmos-Policy drops to 48.8&nbsp;% — consistent with depth providing a complementary spatial cue
+          in the presence of visually confusing distractors.
+        </p>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════ QUALITATIVE ══════════════════════════════ -->
+    <section id="qualitative">
+      <div class="container">
+        <h2 class="section-title">Qualitative results</h2>
+
+        <h3 class="sub-title">RoboCasa</h3>
+        <figure class="fig fig-portrait">
+          <img src="../assets/img/sawam/qual_robocasa.jpg" alt="RoboCasa pick-and-place rollouts and predictions for Cosmos-Policy and SA-WAM" />
+          <figcaption>
+            <strong>Pick the condiment bottle from the counter and place it in the sink.</strong> The upper block
+            shows Cosmos-Policy and the lower one SA-WAM, with predictions compared against their corresponding
+            simulator rollouts; for SA-WAM we also show depth predictions. Red boxes mark rollout inconsistencies,
+            the green box task completion.
+          </figcaption>
+        </figure>
+
+        <h3 class="sub-title">Real-world UR5, randomized environments</h3>
+        <p class="table-caption">
+          Two manipulation examples under domain randomization where SA-WAM reaches task completion while
+          Cosmos-Policy fails to disambiguate colour distractors. Rollout errors are highlighted with red squares,
+          task completion with green squares.
+        </p>
+        <figure class="fig fig-qual">
+          <img src="../assets/img/sawam/qual_ur5_mug.jpg" alt="UR5 randomized example: take the pink mug and put it on the middle part of the hanger" />
+          <figcaption>(a) <code>take the pink mug and put it on the middle part of the hanger</code></figcaption>
+        </figure>
+        <figure class="fig fig-qual">
+          <img src="../assets/img/sawam/qual_ur5_grapes.jpg" alt="UR5 randomized example: put the grapes in the yellow plate, then put the banana in the pink plate" />
+          <figcaption>(b) <code>put the grapes in the yellow plate, then put the banana in the pink plate</code></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════ BIBTEX ══════════════════════════════ -->
+    <section id="bibtex">
+      <div class="container">
+        <h2 class="section-title">BibTeX</h2>
+        <pre class="bibtex"><code>@article{lopetegui2026sawam,
+  title   = {Spatially Aware World Action Model via Geometric Latent Diffusion},
+  author  = {Lopetegui Gonzalez, Javier Alejandro and Pacaud, Paul and Schmid, Cordelia},
+  year    = {2026}
+}</code></pre>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════ ACKNOWLEDGEMENT ══════════════════════════════ -->
+    <section id="acknowledgement" class="tight">
+      <div class="container">
+        <h2 class="section-title">Acknowledgement</h2>
+        <div class="prose">
+          <p class="ack">
+            This work was granted access to HPC resources of IDRIS under the allocation AD011017145 made by GENCI.
+            It was funded in part by the French government under management of Agence Nationale de la Recherche as
+            part of the “France 2030” program, reference ANR-23-IACL-0008 (PR[AI]RIE-PSAI projet) and the ANR project
+            VideoPredict (ANR-21-FAI1-0002-01). Cordelia Schmid would like to acknowledge the support by the Körber
+            European Science Prize. The authors thank Peteris Kulits, Federica Spinola and Zeeshan Khan for their
+            valuable contributions to this project.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>© 2026 Javier Alejandro Lopetegui González. <a href="../index.html">Back to home</a>.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js?v=2"></script>
+</body>
+</html>
